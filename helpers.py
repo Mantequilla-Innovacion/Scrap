@@ -1,5 +1,6 @@
 import re
 
+
 def cleaner(soup, website) -> str:
     """
         Limpia el HTML y extrae texto con buena legibilidad.
@@ -9,13 +10,13 @@ def cleaner(soup, website) -> str:
         "pandas": lambda s: s.find("main"),
         "fastapi": lambda s: s.select_one(".md-container"),
         "pytorch": lambda s: s.find(class_="pytorch-container"),
+        "geeksforgeeks": lambda s: s.find("article"),
+        "nodejs": lambda s: s.find("div", id="content")
     }
 
     main_content = main_selectors[website](soup)
 
     for tag in main_content(["script", "style", "noscript"]):
-        tag.decompose()
-    for tag in main_content.select(".sidebar, .navbar, .footer, nav"):
         tag.decompose()
 
     bricks = []
@@ -36,10 +37,21 @@ def cleaner(soup, website) -> str:
 
 
 def next_page_link(soup, website) -> str:
+    """
+        Devuelve el enlace a la siguiente página de un sitio web específico.
+        Si no hay más páginas, devuelve None.
+    """
     selectors = {
         "pandas": lambda s: s.find("a", class_="right-next"),
-        "fastapi": lambda s: s.select_one("a.md-footer__link--next") if s.select_one("a.md-footer__link--next") else None,
+        "fastapi": lambda s: s.select_one("a.md-footer__link--next"),
         "pytorch": lambda s: s.find("a", rel="next"),
+        "geeksforgeeks": lambda s: s.find("a", class_="pg-head"),
+        "nodejs": lambda s: (
+            s.find("a", class_="active")
+            .find_parent("li")
+            .find_next_sibling("li")
+            .find("a")
+        )
     }
 
     if website in selectors:

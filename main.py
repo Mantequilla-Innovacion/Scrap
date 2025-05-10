@@ -5,12 +5,11 @@ from scraper import scrape_website
 
 load_dotenv()
 
-
-# Cargar variables de entorno desde el archivo .env
 ENVIRONMENT = os.getenv("ENVIRONMENT")
 
 
 if __name__ == "__main__":
+
     if ENVIRONMENT == "dev":
         website = input("¿Qué web quieres scrappear? (pandas, fastapi, pytorch) \n").strip().lower()
         start_url = input(f"¿Url de {website}? \n").strip()
@@ -28,6 +27,7 @@ if __name__ == "__main__":
         for i, entry in enumerate(result):
             with open(os.path.join(f"scrapper/{website}", f"pagina_{i+1}.txt"), "w", encoding="utf-8") as f:
                 f.write(entry["text"] + "\n\n" + entry["url"])
+
     elif ENVIRONMENT == "prod":
         import uvicorn
         uvicorn.run("API:app", host="127.0.0.1", port=8000, reload=True)

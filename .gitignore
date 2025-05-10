@@ -1,4 +1,6 @@
 __pycache__/
 config/
+
+scrapper/
 pandas/
-scapper/
+pytorch/

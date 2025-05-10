@@ -9,6 +9,8 @@ class Website(str, Enum):
     pandas = "pandas"
     fastapi = "fastapi"
     pytorch = "pytorch"
+    geeksforgeeks = "geeksforgeeks"
+    nodejs = "nodejs"
 
 @app.get("/scrape")
 def scrape(
@@ -23,4 +25,4 @@ def scrape(
     content = []
     result = scrape_website(url, website, content, max_depth=max_depth)
 
-    return {"scrapped info": result}
+    return {"scrapped data": result}
